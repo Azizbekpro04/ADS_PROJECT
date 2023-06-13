@@ -1,28 +1,31 @@
 #include <iostream>
 #include <vector>
-#include <map>
-#include <algorithm>
 
-std::vector<std::pair<std::string, int>> MapReduce(const std::vector<std::string>& input) {
-    std::map<std::string, int> intermediate;
+using namespace std;
 
-    for (const std::string& word : input) {
-        intermediate[word]++;
+vector<int> findDuplicates(const vector<int>& nums) {
+    vector<int> duplicates;
+    vector<int> count(nums.size() + 1, 0);
+    
+    for (int num : nums) {
+        count[num]++;
+        if (count[num] > 1) {
+            duplicates.push_back(num);
+        }
     }
-
-    std::vector<std::pair<std::string, int>> result;
-    std::copy(intermediate.begin(), intermediate.end(), std::back_inserter(result));
-
-    return result;
+    
+    return duplicates;
 }
 
 int main() {
-    std::vector<std::string> input = {"apple", "banana", "apple", "cherry", "banana", "apple"};
-    std::vector<std::pair<std::string, int>> output = MapReduce(input);
-
-    for (const auto& pair : output) {
-        std::cout << pair.first << ": " << pair.second << std::endl;
+    vector<int> nums = {4, 3, 2, 7, 8, 2, 3, 1};
+    vector<int> duplicates = findDuplicates(nums);
+    
+    cout << "Duplicate elements: ";
+    for (int num : duplicates) {
+        cout << num << " ";
     }
-
+    cout << endl;
+    
     return 0;
 }
