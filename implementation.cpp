@@ -1,31 +1,46 @@
 #include <iostream>
 #include <vector>
+#include <map>
 
-using namespace std;
-
-vector<int> findDuplicates(const vector<int>& nums) {
-    vector<int> duplicates;
-    vector<int> count(nums.size() + 1, 0);
+std::map<std::string, int> mapFunction(const std::vector<std::string>& words) {
+    std::map<std::string, int> intermediateResult;
     
-    for (int num : nums) {
-        count[num]++;
-        if (count[num] > 1) {
-            duplicates.push_back(num);
+    for (const std::string& word : words) {
+        intermediateResult[word]++;
+    }
+    
+    return intermediateResult;
+}
+
+std::map<std::string, int> reduceFunction(const std::vector<std::map<std::string, int>>& intermediateResults) {
+    std::map<std::string, int> finalResult;
+    
+    for (const auto& intermediateResult : intermediateResults) {
+        for (const auto& pair : intermediateResult) {
+            finalResult[pair.first] += pair.second;
         }
     }
     
-    return duplicates;
+    return finalResult;
 }
 
 int main() {
-    vector<int> nums = {4, 3, 2, 7, 8, 2, 3, 1};
-    vector<int> duplicates = findDuplicates(nums);
+    std::vector<std::string> words = {"apple", "banana", "apple", "cherry", "banana", "apple"};
     
-    cout << "Duplicate elements: ";
-    for (int num : duplicates) {
-        cout << num << " ";
+    int chunkSize = words.size() / 2;
+    
+    std::vector<std::map<std::string, int>> intermediateResults;
+    
+    for (int i = 0; i < words.size(); i += chunkSize) {
+        std::vector<std::string> chunk(words.begin() + i, words.begin() + i + chunkSize);
+        intermediateResults.push_back(mapFunction(chunk));
     }
-    cout << endl;
+    
+    std::map<std::string, int> finalResult = reduceFunction(intermediateResults);
+    
+    for (const auto& pair : finalResult) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+    }
     
     return 0;
 }
